@@ -1,3 +1,30 @@
+/*
+G. Работа из дома
+
+Вася реализовал функцию, которая переводит целое число из десятичной системы в двоичную.
+Но, кажется, она получилась не очень оптимальной.
+Попробуйте написать более эффективную программу.
+Не используйте встроенные средства языка по переводу чисел в бинарное представление.
+
+Формат ввода
+На вход подаётся целое число в диапазоне от 0 до 10000.
+
+Формат вывода
+Выведите двоичное представление этого числа.
+
+Пример 1
+Ввод
+5
+Вывод
+101
+
+Пример 2
+Ввод
+14
+Вывод
+1110
+*/
+
 package main
 
 import (
@@ -6,14 +33,25 @@ import (
 	"strconv"
 )
 
-func getBinaryNumber(n int) []int {
-	// Ваше решение
+func GetBinaryNumber(n int) []int {
+	res := make([]int, 0)
+	if n == 0 {
+		return append(res, 0)
+	}
+	for n > 0 {
+		res = append(res, n%2)
+		n = n / 2
+	}
+	for i, j := 0, len(res)-1; i < j; i,j = i+1,j-1 {
+		res[i], res[j] = res[j],res[i]
+	}
+	return res
 }
 
 func main() {
 	scanner := makeScanner()
 	n := readInt(scanner)
-	binaryNumber := getBinaryNumber(n)
+	binaryNumber := GetBinaryNumber(n)
 	printArray(binaryNumber)
 }
 
