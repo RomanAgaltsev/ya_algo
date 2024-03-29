@@ -3,11 +3,39 @@ package main
 import (
 	"bufio"
 	"os"
+	"sort"
 	"strconv"
 )
 
 func factorize(number int) []int {
-	// Ваше решение
+	factors := make([]int, 0)
+	for number > 0 {
+		if number == 2 {
+			factors = append(factors, 2)
+			number = 0
+			break
+		}
+		if number % 2 == 0 {
+			factors = append(factors, 2)
+			number /= 2
+			continue
+		}
+		hasPrimeFactor := false
+		for i := 3; i*i <= number; i += 2 {
+			if number%i == 0 {
+				factors = append(factors, i)
+				number = number / i
+				hasPrimeFactor = true
+				break
+			}
+		}
+		if !hasPrimeFactor {
+			factors = append(factors, number)
+			break
+		}
+	}
+	sort.Ints(factors)
+	return factors
 }
 
 func main() {

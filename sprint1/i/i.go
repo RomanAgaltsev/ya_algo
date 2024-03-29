@@ -8,7 +8,11 @@ import (
 )
 
 func isPowerOfFour(number int) bool {
-	// Ваше решение
+	pow := 1
+	for pow < number {
+		pow *= 4
+	}
+	return pow == number
 }
 
 func main() {
