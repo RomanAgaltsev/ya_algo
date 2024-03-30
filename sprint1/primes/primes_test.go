@@ -29,16 +29,16 @@ func TestIsPrime(t *testing.T) {
 	for num, want := range numsMap {
 		expected := IsPrime(num)
 		if expected != want {
-			t.Errorf("expected %v bot got %v", want, expected)
+			t.Errorf("Common: num %v expected %v bot got %v", num, want, expected)
 		}
 	}
 }
 
 func TestIsPrimeFast(t *testing.T) {
 	for num, want := range numsMap {
-		expected := IsPrime(num)
+		expected := IsPrimeFast(num)
 		if expected != want {
-			t.Errorf("expected %v bot got %v", want, expected)
+			t.Errorf("Fast: num %v expected %v bot got %v", num, want, expected)
 		}
 	}
 }
@@ -47,7 +47,7 @@ func TestIsPrimeTricky(t *testing.T) {
 	for num, want := range numsMap {
 		expected := IsPrimeTricky(num)
 		if expected != want {
-			t.Errorf("expected %v bot got %v", want, expected)
+			t.Errorf("Tricky: num %v expected %v bot got %v", num, want, expected)
 		}
 	}
 }
