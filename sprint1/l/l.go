@@ -1,15 +1,66 @@
+/*
+L. Лишняя буква
+
+Васе очень нравятся задачи про строки, поэтому он придумал свою.
+Есть 2 строки s и t, состоящие только из строчных букв.
+Строка t получена перемешиванием букв строки s и добавлением 1 буквы в случайную позицию.
+Нужно найти добавленную букву.
+
+Формат ввода
+На вход подаются строки s и t, разделённые переносом строки.
+Длины строк не превосходят 1000 символов. Строки не бывают пустыми.
+
+Формат вывода
+Выведите лишнюю букву.
+
+Пример 1
+Ввод
+abcd
+abcde
+Вывод
+e
+Пример 2
+
+Ввод
+go
+ogg
+Вывод
+g
+
+Пример 3
+Ввод
+xtkpx
+xkctpx
+Вывод
+c
+
+*/
+
 package main
 
 import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
-	"strings"
 )
 
 func getExcessiveLetter(s1 string, t1 string) string {
-	// Ваше решение
+	countsS := make(map[string]int)
+	countsT := make(map[string]int)
+	
+	for _, bt := range s1 {
+		countsS[string(bt)] += 1
+	}
+	for _, bt := range t1 {
+		countsT[string(bt)] += 1
+	}
+	
+	for kT, vT := range countsT {
+		if vS, ok := countsS[kT]; !ok || vT > vS {
+			return kT
+		}
+	}
+	return ""
 }
 
 func main() {
@@ -30,30 +81,4 @@ func makeScanner() *bufio.Scanner {
 func readLine(scanner *bufio.Scanner) string {
 	scanner.Scan()
 	return scanner.Text()
-}
-
-func readArray(scanner *bufio.Scanner) []int {
-	scanner.Scan()
-	listString := strings.Split(scanner.Text(), " ")
-	arr := make([]int, len(listString))
-	for i := 0; i < len(listString); i++ {
-		arr[i], _ = strconv.Atoi(listString[i])
-	}
-	return arr
-}
-
-func readInt(scanner *bufio.Scanner) int {
-	scanner.Scan()
-	stringInt := scanner.Text()
-	res, _ := strconv.Atoi(stringInt)
-	return res
-}
-
-func printArray(arr []int) {
-	writer := bufio.NewWriter(os.Stdout)
-	for i := 0; i < len(arr); i++ {
-		writer.WriteString(strconv.Itoa(arr[i]))
-		writer.WriteString(" ")
-	}
-	writer.Flush()
 }
