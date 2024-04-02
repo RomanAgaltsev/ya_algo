@@ -123,7 +123,6 @@ func NewStack() *StackMaxEffective {
 
 func (s *StackMaxEffective) Push(item int) {
 	s.items = append(s.items, item)
-	
 	if maxItemCount, ok := s.maxItemsCount[item]; ok {
 		s.maxItemsCount[item] = maxItemCount + 1
 	} else if item > s.maxItems.Peek() {
