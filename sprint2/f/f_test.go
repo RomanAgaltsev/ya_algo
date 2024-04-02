@@ -2,8 +2,6 @@ package main
 
 import "testing"
 
-
-
 func TestGetMax(t *testing.T) {
 	t.Run("1", func(t *testing.T) {
 		stackMax := NewStack()
