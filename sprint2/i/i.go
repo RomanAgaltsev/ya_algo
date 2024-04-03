@@ -195,7 +195,6 @@ func executeCommand(queue *Queue, command Command) {
 		} else {
 			fmt.Println(item)
 		}
-		
 	}
 	if command.name == "peek" {
 		item, err := queue.Peek()
