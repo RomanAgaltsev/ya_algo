@@ -30,8 +30,8 @@ import (
 )
 
 var (
-	ErrDequeIsEmpty = errors.New("deque is empty")
-	ErrDequeIsFull = errors.New("deque is full")
+	errDequeIsEmpty = errors.New("deque is empty")
+	errDequeIsFull = errors.New("deque is full")
 )
 
 type Deque struct {
@@ -42,7 +42,7 @@ type Deque struct {
 	size int
 }
 
-func NewDeque(n int) *Deque {
+func newDeque(n int) *Deque {
 	return &Deque{
 		deque: make([]int, n),
 		head: 0,
@@ -52,82 +52,59 @@ func NewDeque(n int) *Deque {
 	}
 }
 
-func (d *Deque) IsEmpty() bool {
+func (d *Deque) isEmpty() bool {
 	return d.size == 0
 }
 
-func (d *Deque) IsFull() bool {
+func (d *Deque) isFull() bool {
 	return d.size == d.max
 }
 
-func (d *Deque) MoveHead(step int) {
+func (d *Deque) moveHead(step int) {
 	d.head = (d.head + step + d.max) % d.max
 }
 
-func (d *Deque) MoveTail(step int) {
+func (d *Deque) moveTail(step int) {
 	d.tail = (d.tail + step + d.max) % d.max
 }
 
-func (d *Deque) PushBack(value int) error {
-	if d.IsFull() {
-		return ErrDequeIsFull
+func (d *Deque) pushBack(value int) error {
+	if d.isFull() {
+		return errDequeIsFull
 	}
 	d.deque[d.tail] = value
+	d.moveTail(1)
 	d.size += 1
-	
-	if !d.IsFull() {
-		if d.head == d.tail {
-			d.MoveHead(-1)
-		}
-		d.MoveTail(1)
-	}
 	return nil
 }
 
-func (d *Deque) PushFront(value int) error {
-	if d.IsFull() {
-		return ErrDequeIsFull
+func (d *Deque) pushFront(value int) error {
+	if d.isFull() {
+		return errDequeIsFull
 	}
+	d.moveHead(-1)
 	d.deque[d.head] = value
 	d.size += 1
-	if !d.IsFull() {
-		if d.head == d.tail {
-			d.MoveTail(1)
-		}
-		d.MoveHead(-1)
-	}
 	return nil
 }
 
-func (d *Deque) PopFront() (int, error) {
-	if d.IsEmpty() {
-		return 0, ErrDequeIsEmpty
-	}
-	if !d.IsFull() {
-		d.MoveHead(1)
+func (d *Deque) popFront() (int, error) {
+	if d.isEmpty() {
+		return 0, errDequeIsEmpty
 	}
 	value := d.deque[d.head]
-	d.deque[d.head] = 0
-	d.size -= 1	
-	if d.IsEmpty() {
-		d.tail = d.head
-	}
+	d.moveHead(1)
+	d.size -= 1
 	return value, nil
 }
 
-func (d *Deque) PopBack() (int, error) {
-	if d.IsEmpty() {
-		return 0, ErrDequeIsEmpty
-	}	
-	if !d.IsFull() {
-		d.MoveTail(-1)
-	}	
-	value := d.deque[d.tail]
-	d.deque[d.tail] = 0
-	d.size -= 1	
-	if d.IsEmpty() {
-		d.head = d.tail
+func (d *Deque) popBack() (int, error) {
+	if d.isEmpty() {
+		return 0, errDequeIsEmpty
 	}
+	d.moveTail(-1)
+	value := d.deque[d.tail]
+	d.size -= 1
 	return value, nil
 }
 
@@ -140,14 +117,19 @@ func main() {
 	scanner := makeScanner()
 	commandsNumber := readInt(scanner)
 	dequeMax := readInt(scanner)
-	deque := NewDeque(dequeMax)
+	deque := newDeque(dequeMax)
 	commands := make([]Command, commandsNumber)
 	for i := 0; i < commandsNumber; i++ {
 		commands = append(commands, readCommand(scanner))
 	}
+	result := ""
 	writer := bufio.NewWriter(os.Stdout)
 	for _, command := range commands {
-		executeCommand(deque, command, writer)
+		result = executeCommand(deque, command)
+		if result != "" {
+			writer.WriteString(result)
+			writer.WriteString("\n")
+		}
 	}
 	writer.Flush()
 }
@@ -180,35 +162,34 @@ func readCommand(scanner *bufio.Scanner) Command {
 	return command
 }
 
-func executeCommand(deque *Deque, command Command, writer *bufio.Writer) {
+func executeCommand(deque *Deque, command Command) string {
 	if command.name == "push_back" {
-		err := deque.PushBack(command.parameter)
+		err := deque.pushBack(command.parameter)
 		if err != nil {
-			writer.WriteString("error\n")
+			return "error"
 		}
 	}
 	if command.name == "push_front" {
-		err := deque.PushFront(command.parameter)
+		err := deque.pushFront(command.parameter)
 		if err != nil {
-			writer.WriteString("error\n")
+			return "error"
 		}
 	}
 	if command.name == "pop_front" {
-		value, err := deque.PopFront()
+		value, err := deque.popFront()
 		if err != nil {
-			writer.WriteString("error\n")
+			return "error"
 		} else {
-			writer.WriteString(strconv.Itoa(value))
-			writer.WriteString("\n")
+			return strconv.Itoa(value)
 		}
 	}
 	if command.name == "pop_back" {
-		value, err := deque.PopBack()
+		value, err := deque.popBack()
 		if err != nil {
-			writer.WriteString("error\n")
+			return "error"
 		} else {
-			writer.WriteString(strconv.Itoa(value))
-			writer.WriteString("\n")
+			return strconv.Itoa(value)
 		}
 	}
+	return ""
 }
