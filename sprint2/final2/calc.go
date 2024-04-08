@@ -8,7 +8,7 @@
 Задача - B. Калькулятор
 
 Отчеты:
-- Ревью 1 - https://contest.yandex.ru/contest/22781/run-report/111620784/
+- Ревью 1 - https://contest.yandex.ru/contest/22781/run-report/111645051/
 
 -- ПРИНЦИП РАБОТЫ --
 Принцип работы решения довольно простой:
