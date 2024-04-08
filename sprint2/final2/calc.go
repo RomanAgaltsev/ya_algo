@@ -8,7 +8,7 @@
 Задача - B. Калькулятор
 
 Отчеты:
-- Ревью 1 -
+- Ревью 1 - https://contest.yandex.ru/contest/22781/run-report/111620784/
 
 -- ПРИНЦИП РАБОТЫ --
 
@@ -25,6 +25,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -67,9 +68,9 @@ func (c *Calculator) calculate() int {
 	return c.stack.pop()
 }
 
-func newCalculator() *Calculator {
+func newCalculator(expression string) *Calculator {
 	return &Calculator{
-		exp: "",
+		exp: expression,
 		stack: newStack(),
 	}
 }
@@ -84,11 +85,11 @@ func doOperation(op string, a, b int) int {
 	case "+":
 		res = a + b
 	case "-":
-		res =  a - b
+		res = a - b
 	case "*":
-		res =  a * b
+		res = a * b
 	case "/":
-		res =  a / b
+		res = int(math.Floor(float64(a) / float64(b)))
 	}
 	return res
 }
@@ -108,7 +109,6 @@ func readLine(scanner *bufio.Scanner) string {
 
 func main() {
 	scanner := makeScanner()
-	calc := newCalculator()
-	calc.exp = readLine(scanner)
+	calc := newCalculator(readLine(scanner))
 	fmt.Print(calc.calculate())
 }
