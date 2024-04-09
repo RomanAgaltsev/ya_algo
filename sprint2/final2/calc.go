@@ -9,6 +9,7 @@
 
 Отчеты:
 - Ревью 1 - https://contest.yandex.ru/contest/22781/run-report/111645051/
+- Ревью 2 - https://contest.yandex.ru/contest/22781/run-report/111713420/
 
 -- ПРИНЦИП РАБОТЫ --
 Принцип работы решения довольно простой:
@@ -53,6 +54,7 @@
 
 -- ПРОСТРАНСТВЕННАЯ СЛОЖНОСТЬ --
 При решении задачи память потребуется для:
+- Мапа для хранения операторов и функций - O(1)
 - Стек калькулятора - O(k), где k - размер слайса стека
 - Строка-выражение в ОПН - O(m), где m - количество символов в строке-выражении
 - Слайс для хранения токенов - разбитая по пробелам строка складывается в этот слайс - O(n)
@@ -72,6 +74,14 @@ import (
 	"strconv"
 	"strings"
 )
+
+// operations - мапа для хранения операций-функций по ключам-операторам
+var operations = map[string]func(int, int) int{
+	"+": func(a, b int) int { return a + b },
+	"-": func(a, b int) int { return a - b },
+	"*": func(a, b int) int { return a * b },
+	"/": func(a, b int) int { return int(math.Floor(float64(a) / float64(b))) },
+}
 
 // Stack - структура стека для хранения операндов
 type Stack struct {
@@ -109,13 +119,13 @@ func (c *Calculator) calculate() int {
 	// Полученный слайс строк обходим в цикле и выполняем вычисления
 	for _, token := range tokens {
 		// Проверяем, не оператор ли это
-		if isOperator(token) {
-			// Это оператор - выполняем вычисление
+		if operation, ok := operations[token]; ok {
+			// Это оператор, выполняем вычисление
 			// Забираем из стека два операнда - т.к. хранятся в стеке, то в обратном порядке
 			b, a := c.stack.pop(), c.stack.pop()
-			// Выполняем операцию - применяем оператор к операндам из стека
+			// Выполняем операцию - по ключу оператора в мапе лежит функция - можно сразу её выполнить
 			// Результат отправляем обратно в стек
-			c.stack.push(doOperation(token, a, b))
+			c.stack.push(operation(a, b))
 		} else {
 			// Это не оператор
 			// Преобразовываем строку в целое число
@@ -135,28 +145,6 @@ func newCalculator(expression string) *Calculator {
 		exp: expression, // Выражение в ОПН
 		stack: newStack(), // Новый стек для вычислений
 	}
-}
-
-// isOperator - проверяет, является ли переданная строка оператором
-func isOperator(op string) bool {
-	return op == "+" || op == "-" || op == "*" || op == "/"
-}
-
-// doOperation - выполняет переданный оператор над переданными операндами
-func doOperation(op string, a, b int) int {
-	var res int
-	switch op {
-	case "+":
-		res = a + b
-	case "-":
-		res = a - b
-	case "*":
-		res = a * b
-	case "/":
-		// По условию задачи под делением понимается математическое целочисленное деление
-		res = int(math.Floor(float64(a) / float64(b)))
-	}
-	return res
 }
 
 func makeScanner() *bufio.Scanner {
