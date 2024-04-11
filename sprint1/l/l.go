@@ -42,6 +42,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sort"
+	"strings"
 )
 
 func getExcessiveLetter(s1 string, t1 string) string {
@@ -63,11 +65,27 @@ func getExcessiveLetter(s1 string, t1 string) string {
 	return ""
 }
 
+func sortString(s string) string {
+	sSplitted := strings.Split(s, "")
+	sort.Strings(sSplitted)
+	return strings.Join(sSplitted, "")
+}
+
+func getExcessiveLetter1(s1, t1 string) string {
+	sSorted := sortString(s1)
+	tSorted := sortString(t1)
+	for i := 0; i < len(tSorted); i++ {
+		if i > len(sSorted) - 1 || tSorted[i] != sSorted[i] {
+			return string(tSorted[i])
+		}
+	}
+	return ""
+}
+
 func main() {
 	scanner := makeScanner()
-	s := readLine(scanner)
-	t := readLine(scanner)
-	fmt.Printf(getExcessiveLetter(s, t))
+	s, t := readLine(scanner), readLine(scanner)
+	fmt.Printf(getExcessiveLetter1(s, t))
 }
 
 func makeScanner() *bufio.Scanner {
