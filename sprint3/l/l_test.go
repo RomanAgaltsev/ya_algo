@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
+	"math/rand"
 	"reflect"
 	"testing"
 )
 
-func TestBikesSearch(t *testing.T) {
+func TestDaySearch(t *testing.T) {
 	bikesTests := []struct {
 		testNumber string
 		savings    []int
@@ -21,6 +23,22 @@ func TestBikesSearch(t *testing.T) {
 			got := getDays(tt.savings, tt.price)
 			if !reflect.DeepEqual(got, tt.days) {
 				t.Errorf("%#v got %v want %v", tt.savings, got, tt.days)
+			}
+		})
+	}
+}
+
+func BenchmarkDaySearch(b *testing.B) {
+	for _, size := range []int{10, 100, 1000, 10000, 100000, 1000000} {
+		b.Run(fmt.Sprintf("Size%d", size), func(b *testing.B) {
+			savings := make([]int, size)
+			for i := range savings {
+				savings[i] = i
+			}
+			price := rand.Intn(size)
+			b.ResetTimer()
+			for i := 0; i < b.N; i++ {
+				daySearch(savings, price, 0, len(savings)-1)
 			}
 		})
 	}
