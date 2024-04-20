@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"slices"
 	"testing"
 )
 
@@ -38,11 +39,21 @@ func TestBrokenSearch(t *testing.T) {
 func BenchmarkBrokenSearch(b *testing.B) {
 	for _, size := range []int{10, 100, 1000, 10000, 100000, 1000000} {
 		b.Run(fmt.Sprintf("Size%d", size), func(b *testing.B) {
+			// Инициируем слайс
 			ints := make([]int, size)
+			// Заполняем слайс случайными целыми числами, значения до 10_000
 			for i := range ints {
-				ints[i] = rand.Intn(size)
+				ints[i] = rand.Intn(10_000)
 			}
-			needle := rand.Intn(size)
+			// Сортируем слайс
+			slices.Sort(ints)
+			// Имитируем поломку слайса
+			// Сдвиг - случайное число
+			shift := rand.Intn(size)
+			// Ломаем массив по сдвигу
+			ints = append(ints[shift:], ints[:shift]...)
+			// Искомое значение
+			needle := rand.Intn(10_000)
 			b.SetBytes(2)
 			b.ResetTimer()
 			for i := 0; i < b.N; i++ {

@@ -1,3 +1,43 @@
+/*
+Яндекс Практикум
+Алгоритмы и структуры данных
+58 когорта
+Агальцев Роман
+
+Спринт 3
+Задача - A. Поиск в сломанном массиве
+
+Отчеты:
+- Ревью 1 - https://contest.yandex.ru/contest/23815/run-report/112512062/
+
+-- ПРИНЦИП РАБОТЫ --
+
+-- ДОКАЗАТЕЛЬСТВО КОРРЕКТНОСТИ --
+
+-- ВРЕМЕННАЯ СЛОЖНОСТЬ --
+
+-- ПРОСТРАНСТВЕННАЯ СЛОЖНОСТЬ --
+
+
+-- БЕНЧМАРК --
+
+!!ДОБАВИТЬ В БЕНЧМАРК СДВИГ!!
+
+goos: windows
+goarch: amd64
+pkg: main/final1
+cpu: AMD Ryzen 5 3600 6-Core Processor
+BenchmarkBrokenSearch/Size10-12                 100000000               15.22 ns/op      131.45 MB/s
+BenchmarkBrokenSearch/Size100-12                37351294                28.24 ns/op       70.82 MB/s
+BenchmarkBrokenSearch/Size1000-12               32399244                39.05 ns/op       51.21 MB/s
+BenchmarkBrokenSearch/Size10000-12              23682278                50.15 ns/op       39.88 MB/s
+BenchmarkBrokenSearch/Size100000-12             20193248                56.95 ns/op       35.12 MB/s
+BenchmarkBrokenSearch/Size1000000-12            21920210                60.85 ns/op       32.87 MB/s
+PASS
+ok      main/final1     8.312s
+
+*/
+
 package main
 
 import (
