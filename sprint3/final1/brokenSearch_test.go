@@ -37,7 +37,7 @@ func TestBrokenSearch(t *testing.T) {
 }
 
 func BenchmarkBrokenSearch(b *testing.B) {
-	for _, size := range []int{10, 100, 1000, 10000, 100000, 1000000} {
+	for _, size := range []int{10, 100, 1_000, 10_000, 100_000, 1_000_000, 10_000_000} {
 		b.Run(fmt.Sprintf("Size%d", size), func(b *testing.B) {
 			// Инициируем слайс
 			ints := make([]int, size)
@@ -52,7 +52,7 @@ func BenchmarkBrokenSearch(b *testing.B) {
 			shift := rand.Intn(size)
 			// Ломаем массив по сдвигу
 			ints = append(ints[shift:], ints[:shift]...)
-			// Искомое значение
+			// Искомое значение, до 10_000
 			needle := rand.Intn(10_000)
 			b.SetBytes(2)
 			b.ResetTimer()
