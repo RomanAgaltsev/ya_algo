@@ -8,7 +8,7 @@
 Задача - A. Поиск в сломанном массиве
 
 Отчеты:
-- Ревью 1 -
+- Ревью 1 - https://contest.yandex.ru/contest/23815/run-report/112752050/
 
 -- ПРИНЦИП РАБОТЫ --
 
@@ -38,16 +38,6 @@ type Participant struct {
 }
 
 func less(a, b Participant) int {
-//	if a.solve > b.solve {
-//		return -1
-//	} else if a.solve < b.solve {
-//		return 1
-//	}
-//	if a.penalty < b.penalty {
-//		return -1
-//	} else if a.penalty > b.penalty {
-//		return 1
-//	}
 	if res := cmp.Compare(b.solve, a.solve); res != 0 {
 		return res
 	}
@@ -57,7 +47,7 @@ func less(a, b Participant) int {
 	return strings.Compare(a.login, b.login)
 }
 
-func partition(participants []Participant, left, right int) (int,int) {
+func partition(participants []Participant, left, right int) int {
 	pivotIndex := left + (right - left) / 2
 	pivot := participants[pivotIndex]
 	for left < right {
@@ -71,22 +61,16 @@ func partition(participants []Participant, left, right int) (int,int) {
 			participants[left], participants[right] = participants[right], participants[left]
 		}
 	}
-	return left, right
+	return right
 }
 
 func quickSort(participants []Participant, left, right int) {
 	if left >= right {
 		return
 	}
-	lb, rb := partition(participants, left, right)
-	if lb == rb {
-		quickSort(participants, left, lb-1)
-		quickSort(participants, rb+1, right)
-	} else {
-		quickSort(participants, left, lb)
-		quickSort(participants, rb, right)
-	}
-
+	p := partition(participants, left, right)
+	quickSort(participants, left, p-1)
+	quickSort(participants, p+1, right)
 }
 
 func main() {
