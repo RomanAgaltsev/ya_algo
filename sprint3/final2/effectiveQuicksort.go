@@ -25,6 +25,7 @@ package main
 
 import (
 	"bufio"
+	"cmp"
 	"os"
 	"strconv"
 	"strings"
@@ -36,44 +37,63 @@ type Participant struct {
 	penalty int
 }
 
-func less(a, b Participant) bool {
-	return false
+func less(a, b Participant) int {
+//	if a.solve > b.solve {
+//		return -1
+//	} else if a.solve < b.solve {
+//		return 1
+//	}
+//	if a.penalty < b.penalty {
+//		return -1
+//	} else if a.penalty > b.penalty {
+//		return 1
+//	}
+	if res := cmp.Compare(b.solve, a.solve); res != 0 {
+		return res
+	}
+	if res := cmp.Compare(a.penalty, b.penalty); res != 0 {
+		return res
+	}
+	return strings.Compare(a.login, b.login)
 }
 
-func partition(participants []Participant, left, right int) int {
-	pivot := participants[(left + right + 1) / 2]
-	i, j := left, right
-	for {
-		for i < j && less(participants[i], pivot) {
-			i++
+func partition(participants []Participant, left, right int) (int,int) {
+	pivotIndex := left + (right - left) / 2
+	pivot := participants[pivotIndex]
+	for left < right {
+		for less(participants[left], pivot) == -1 {
+			left++
 		}
-		for j > i && less(pivot, participants[j]) {
-			j--
+		for less(pivot, participants[right]) == -1 {
+			right--
 		}
-		if i < j {
-			participants[i], participants[j] = participants[j], participants[i]
-			i++
-			j--
-		} else {
-			return j
+		if left < right {
+			participants[left], participants[right] = participants[right], participants[left]
 		}
 	}
+	return left, right
 }
 
 func quickSort(participants []Participant, left, right int) {
-	if left <= right {
+	if left >= right {
 		return
 	}
-	j := partition(participants, left, right)
-	quickSort(participants,left,j)
-	quickSort(participants,j,right)
+	lb, rb := partition(participants, left, right)
+	if lb == rb {
+		quickSort(participants, left, lb-1)
+		quickSort(participants, rb+1, right)
+	} else {
+		quickSort(participants, left, lb)
+		quickSort(participants, rb, right)
+	}
+
 }
 
 func main() {
 	scanner := makeScanner()
 	n := readInt(scanner)
 	participants := readParticipants(scanner, n)
-	quickSort(participants, 0, len(participants))
+	quickSort(participants, 0, len(participants)-1)
 	printParticipants(participants)
 }
 
