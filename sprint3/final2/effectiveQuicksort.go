@@ -9,6 +9,8 @@
 
 Отчеты:
 - Ревью 1 - https://contest.yandex.ru/contest/23815/run-report/112777191/
+- Ревью 2 (рандом)  - https://contest.yandex.ru/contest/23815/run-report/112873272/
+-         (медиана) - https://contest.yandex.ru/contest/23815/run-report/112874091/
 
 -- ПРИНЦИП РАБОТЫ --
 Из постановки задачи сразу было понятно, что нужно сделать и как решать:
@@ -94,7 +96,6 @@ package main
 import (
 	"bufio"
 	"cmp"
-	"math/rand"
 	"os"
 	"strconv"
 	"strings"
@@ -128,11 +129,20 @@ func less(a, b Participant) int {
 	return strings.Compare(a.login, b.login)
 }
 
+func medianOfThree(a, b, c int) int {
+	if (a < b && b < c) || (c < b && b < a) {
+		return b
+	} else if (b < a && a < c) || (c < a && a < b) {
+		return a
+	}
+	return c
+}
+
 // partition - разбивает переданный слайс участников в рамках переданных границ left и right,
 //	с определением опорного элемента и раскидыванием остальных элементов влево и вправо от опорного
 func partition(participants []Participant, left, right int) int {
 	// Определяем индекс опорного элемента - отдельной строкой, чтобы удобнее было в отладчике смотреть его значение
-	pivotIndex := rand.Intn(right + 1 - left) + left
+	pivotIndex := medianOfThree(left, (left + right) / 2, right)
 	// Сам опорный элемент
 	pivot := participants[pivotIndex]
 	// Двигаем указатели left и right, пока они не встретились
