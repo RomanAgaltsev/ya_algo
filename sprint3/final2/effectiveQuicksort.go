@@ -94,6 +94,7 @@ package main
 import (
 	"bufio"
 	"cmp"
+	"math/rand"
 	"os"
 	"strconv"
 	"strings"
@@ -131,7 +132,7 @@ func less(a, b Participant) int {
 //	с определением опорного элемента и раскидыванием остальных элементов влево и вправо от опорного
 func partition(participants []Participant, left, right int) int {
 	// Определяем индекс опорного элемента - отдельной строкой, чтобы удобнее было в отладчике смотреть его значение
-	pivotIndex := left + (right - left) / 2
+	pivotIndex := rand.Intn(right + 1 - left) + left
 	// Сам опорный элемент
 	pivot := participants[pivotIndex]
 	// Двигаем указатели left и right, пока они не встретились
