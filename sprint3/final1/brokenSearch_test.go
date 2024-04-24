@@ -37,9 +37,10 @@ func TestBrokenSearch(t *testing.T) {
 }
 
 func BenchmarkBrokenSearch(b *testing.B) {
+	// Выполняем бенчмарк для слайсов размера 10, 100, 1000, 10000, 100000, 1000000 и 10000000
 	for _, size := range []int{10, 100, 1_000, 10_000, 100_000, 1_000_000, 10_000_000} {
 		b.Run(fmt.Sprintf("Size%d", size), func(b *testing.B) {
-			// Инициируем слайс
+			// Инициируем слайс нужного размера
 			ints := make([]int, size)
 			// Заполняем слайс случайными целыми числами, значения до 10_000
 			for i := range ints {
