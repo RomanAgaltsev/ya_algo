@@ -47,6 +47,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"reflect"
 	"strconv"
 	"strings"
 )
@@ -54,8 +55,7 @@ import (
 func getHash(s string, a, m int) int {
 	hash := 0
 	for i := 0; i < len(s); i++ {
-		c, _ := strconv.Atoi(string(s[i]))
-		hash = (hash*a%m + c) % m
+		hash = (hash*a%m + int(s[i])) % m
 	}
 	return hash
 }
@@ -71,30 +71,26 @@ func getPower(n int, a int, m int) int {
 func checkCollision(nArr, mArr []string, window int) bool {
 	const a = 997
 	const m = 1000000007
-	hashes := make(map[int]string)
-	s := strings.Join(nArr[:window], "")
-	hash := getHash(s, a, m)
+	hashes := make(map[int][]string)
+	s := nArr[:window]
+	hash := getHash(strings.Join(nArr[:window], ""), a, m)
 	hashes[hash] = s
 	power := getPower(window, a, m)
-	for i := 1; i+window-1 < len(nArr); i++ {
-		c1, _ := strconv.Atoi(nArr[i-1])
-		c2, _ := strconv.Atoi(nArr[i+window-1])
-		hash = (hash + m - c1*power%m) % m
-		hash = (hash*a%m + c2) % m
-		hashes[hash] = strings.Join(nArr[i:i+window], "")
+	for i := 1; i+window <= len(nArr); i++ {
+		hash = (hash + m - getHash(nArr[i-1],a,m)*power%m) % m
+		hash = (hash*a%m + getHash(nArr[i+window-1],a,m)) % m
+		hashes[hash] = nArr[i:i+window]
 	}
-	s = strings.Join(mArr[:window], "")
-	hash = getHash(s, a, m)
-	if str, ok := hashes[hash]; ok && s == str {
+	s = mArr[:window]
+	hash = getHash(strings.Join(mArr[:window], ""), a, m)
+	if str, ok := hashes[hash]; ok && reflect.DeepEqual(s, str) {
 		return true
 	}
-	for i := 1; i+window-1 < len(mArr); i++ {
-		c1, _ := strconv.Atoi(nArr[i-1])
-		c2, _ := strconv.Atoi(nArr[i+window-1])
-		hash = (hash + m - c1*power%m) % m
-		hash = (hash*a%m + c2) % m
-		s = strings.Join(mArr[i:i+window], "")
-		if str, ok := hashes[hash]; ok && s == str {
+	for i := 1; i+window <= len(mArr); i++ {
+		hash = (hash + m - getHash(mArr[i-1],a,m)*power%m) % m
+		hash = (hash*a%m + getHash(mArr[i+window-1],a,m)) % m
+		s = mArr[i:i+window]
+		if str, ok := hashes[hash]; ok && reflect.DeepEqual(s, str) {
 			return true
 		}
 	}
@@ -125,7 +121,7 @@ func main() {
 }
 
 func makeScanner() *bufio.Scanner {
-	const maxCapacity = 3 * 1024 * 1024
+	const maxCapacity = 10 * 1024 * 1024
 	buf := make([]byte, maxCapacity)
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Buffer(buf, maxCapacity)
@@ -139,12 +135,7 @@ func readInt(scanner *bufio.Scanner) int {
 	return res
 }
 
-func readArray(scanner *bufio.Scanner) []int {
+func readArray(scanner *bufio.Scanner) []string {
 	scanner.Scan()
-	listString := strings.Split(scanner.Text(), " ")
-	arr := make([]int, len(listString))
-	for i := 0; i < len(listString); i++ {
-		arr[i], _ = strconv.Atoi(listString[i])
-	}
-	return arr
+	return strings.Split(scanner.Text(), " ")
 }
