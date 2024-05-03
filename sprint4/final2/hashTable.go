@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	hashMapCapacity int = 100007
+	hashTableCapacity int = 1000001
 	errValueIsAbsent = errors.New("value is absent")
 )
 
@@ -39,17 +39,10 @@ type HashTable struct {
 	table []*node
 }
 
-func (ht *HashTable) hash(key int) int {
-	if key < 0 {
-		key = -key
-	}
+func (ht *HashTable) index(key int) int {
 	h := fnv.New32()
 	h.Write([]byte(strconv.Itoa(key)))
-	return int(h.Sum32())
-}
-
-func (ht *HashTable) index(key int) int {
-	hash := ht.hash(key)
+	hash := int(h.Sum32())
 	return hash % ht.capacity
 }
 
@@ -118,8 +111,8 @@ func (ht *HashTable) delete(key int) (int, error) {
 
 func NewHashTable() *HashTable {
 	return &HashTable{
-		capacity: hashMapCapacity,
-		table: make([]*node, hashMapCapacity),
+		capacity: hashTableCapacity,
+		table: make([]*node, hashTableCapacity),
 	}
 }
 
