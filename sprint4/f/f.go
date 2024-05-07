@@ -83,7 +83,7 @@ func getPowers(s string, a, m int) []int {
 }
 
 func getHash(prefixHashes, powers []int, l, r, m int) int {
-	return (prefixHashes[r] + m - ((prefixHashes[l] * powers[r - l])) % m) % m
+	return (prefixHashes[r] + m - (prefixHashes[l] * powers[r - l]) % m) % m
 }
 
 func main() {
