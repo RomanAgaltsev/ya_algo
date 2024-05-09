@@ -110,24 +110,22 @@ func (m *MaxOfStack) Peek() int {
 type StackMaxEffective struct {
 	items []int
 	maxItems *MaxOfStack
-	maxItemsCount map[int]int
 }
 
 func NewStack() *StackMaxEffective {
 	return &StackMaxEffective{
 		items: []int{},
 		maxItems: NewMaxOfStack(),
-		maxItemsCount: map[int]int{},
 	}
 }
 
 func (s *StackMaxEffective) Push(item int) {
 	s.items = append(s.items, item)
-	if maxItemCount, ok := s.maxItemsCount[item]; ok {
-		s.maxItemsCount[item] = maxItemCount + 1
-	} else if item > s.maxItems.Peek() {
+	maxItem := s.maxItems.Peek()
+	if item > maxItem {
 		s.maxItems.Push(item)
-		s.maxItemsCount[item] = 1
+	} else {
+		s.maxItems.Push(maxItem)
 	}
 }
 
@@ -138,14 +136,7 @@ func (s *StackMaxEffective) Pop() (int, error) {
 	lastIndex := len(s.items) - 1
 	lastItem := s.items[lastIndex]
 	s.items = s.items[:lastIndex]
-	if maxItemCount, ok := s.maxItemsCount[lastItem]; ok {
-		if maxItemCount == 1 {
-			s.maxItems.Pop()
-			delete(s.maxItemsCount, lastItem)
-		} else {
-			s.maxItemsCount[lastItem] = maxItemCount - 1
-		}
-	}
+	s.maxItems.Pop()
 	return lastItem, nil
 }
 
