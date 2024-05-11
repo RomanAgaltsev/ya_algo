@@ -14,7 +14,6 @@ A. Лампочки
 
 package main
 
-
 // <template>
 type Node struct {  
 	value  int  
