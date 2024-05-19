@@ -23,7 +23,7 @@ func BenchmarkHeapsort(b *testing.B) {
 
 func RunBenchmarkHeapsort(b *testing.B, iterative bool) {
 	for _, size := range []int{10_000, 100_000, 1_000_000} {
-		b.Run(fmt.Sprintf("Size=%d/Iterative=%v/", size, iterative), func(b *testing.B) {
+		b.Run(fmt.Sprintf("Size=%d/Iterative=%v/cores", size, iterative), func(b *testing.B) {
 			participants := make([]Participant, size)
 			for i := range participants {
 				participants[i] = Participant{
