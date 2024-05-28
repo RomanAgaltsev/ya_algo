@@ -41,21 +41,21 @@ import (
 	"strconv"
 )
 
-func getParSeq(n int, left int, right int, result string) {
-	if left+right == 2*n {
+func getParSeqRecursive(open int, close int, result string) {
+	if open == 0 && close == 0 {
 		fmt.Println(result)
 		return
 	}
-	if left < n {
-		getParSeq(n, left+1, right, result+"(")
+	if open > 0 {
+		getParSeqRecursive(open-1, close+1, result+"(")
 	}
-	if left > right {
-		getParSeq(n, left, right+1, result+")")
+	if close > 0 {
+		getParSeqRecursive(open, close-1, result+")")
 	}
 }
 
 func main() {
-	getParSeq(readInt(), 0, 0, "")
+	getParSeqRecursive(readInt(), 0, "")
 }
 
 func readInt() int {
