@@ -58,23 +58,20 @@ func main() {
 		fmt.Print("NO")
 		return
 	}
-	ms := make(map[byte]byte)
-	mt := make(map[byte]byte)
+	r := "YES"
+	m := make(map[byte]byte)
 	for i := 0; i < len(s); i++ {
-		if ct, okt := mt[s[i]]; !okt {
-			if cs, oks := ms[t[i]]; !oks {
-				ms[t[i]] = s[i]
-			} else if cs != s[i] {
-				fmt.Print("NO")
-				return
-			}
-			mt[s[i]] = t[i]
-		} else if ct != t[i] {
-			fmt.Print("NO")
-			return
+		c, ok := m[s[i]]
+		if !ok {
+			m[s[i]] = t[i]
+			continue
+		}
+		if c != t[i] {
+			r = "NO"
+			break
 		}
 	}
-	fmt.Print("YES")
+	fmt.Print(r)
 }
 
 func makeScanner() *bufio.Scanner {

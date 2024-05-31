@@ -76,7 +76,7 @@ func checkCollision(nArr, mArr []string, window int) bool {
 	hash := getHash(strings.Join(nArr[:window], ""), a, m)
 	hashes[hash] = s
 	power := getPower(window, a, m)
-	for i := 1; i+window <= len(nArr); i++ {
+	for i := 1; i+window-1 < len(nArr); i++ {
 		hash = (hash + m - getHash(nArr[i-1],a,m)*power%m) % m
 		hash = (hash*a%m + getHash(nArr[i+window-1],a,m)) % m
 		hashes[hash] = nArr[i:i+window]
@@ -86,7 +86,7 @@ func checkCollision(nArr, mArr []string, window int) bool {
 	if str, ok := hashes[hash]; ok && reflect.DeepEqual(s, str) {
 		return true
 	}
-	for i := 1; i+window <= len(mArr); i++ {
+	for i := 1; i+window-1 < len(mArr); i++ {
 		hash = (hash + m - getHash(mArr[i-1],a,m)*power%m) % m
 		hash = (hash*a%m + getHash(mArr[i+window-1],a,m)) % m
 		s = mArr[i:i+window]
@@ -99,10 +99,10 @@ func checkCollision(nArr, mArr []string, window int) bool {
 
 func getGLC(nArr, mArr []string) int {
 	maxLen := 0
-	left := 0
+	left := 1
 	right := min(len(nArr), len(mArr))
 	for left <= right {
-		middle := (left + right) / 2
+		middle := left + (right-left)/2
 		if checkCollision(nArr, mArr, middle) {
 			maxLen = middle
 			left = middle + 1
