@@ -36,61 +36,54 @@ B. Соревнование
 package main
 
 import (
-	"bufio"
-	"fmt"
-	"os"
-	"strconv"
-	"strings"
+    "bufio"
+    "fmt"
+    "os"
+    "strconv"
+    "strings"
 )
 
-func max(a,b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
 func getMaxDraw(arr []string) int {
-	count, maxDraw := 0, 0
-	draws := map[int]int{0: -1}
-	for i, num := range arr {
-		if num == "1" {
-			count++
-		} else {
-			count--
-		}
-		if draw, ok := draws[count]; ok {
-			maxDraw = max(maxDraw, i - draw)
-		} else {
-			draws[count] = i
-		}
-	}
-	return maxDraw
+    count, maxDraw := 0, 0
+    draws := map[int]int{0: -1}
+    for i, num := range arr {
+        if num == "1" {
+            count++
+        } else {
+            count--
+        }
+        if draw, ok := draws[count]; ok {
+            maxDraw = max(maxDraw, i-draw)
+        } else {
+            draws[count] = i
+        }
+    }
+    return maxDraw
 }
 
 func main() {
-	scanner := makeScanner()
-	readInt(scanner)
-	arr := readArray(scanner)
-	fmt.Print(getMaxDraw(arr))
+    scanner := makeScanner()
+    readInt(scanner)
+    arr := readArray(scanner)
+    fmt.Print(getMaxDraw(arr))
 }
 
 func makeScanner() *bufio.Scanner {
-	const maxCapacity = 3 * 1024 * 1024
-	buf := make([]byte, maxCapacity)
-	scanner := bufio.NewScanner(os.Stdin)
-	scanner.Buffer(buf, maxCapacity)
-	return scanner
+    const maxCapacity = 3 * 1024 * 1024
+    buf := make([]byte, maxCapacity)
+    scanner := bufio.NewScanner(os.Stdin)
+    scanner.Buffer(buf, maxCapacity)
+    return scanner
 }
 
 func readInt(scanner *bufio.Scanner) int {
-	scanner.Scan()
-	stringInt := scanner.Text()
-	res, _ := strconv.Atoi(stringInt)
-	return res
+    scanner.Scan()
+    stringInt := scanner.Text()
+    res, _ := strconv.Atoi(stringInt)
+    return res
 }
 
 func readArray(scanner *bufio.Scanner) []string {
-	scanner.Scan()
-	return strings.Split(scanner.Text(), " ")
+    scanner.Scan()
+    return strings.Split(scanner.Text(), " ")
 }
