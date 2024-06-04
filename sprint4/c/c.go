@@ -46,43 +46,46 @@ NO
 package main
 
 import (
-	"bufio"
-	"fmt"
-	"os"
+    "bufio"
+    "fmt"
+    "os"
 )
 
 func main() {
-	scanner := makeScanner()
-	s, t := readLine(scanner), readLine(scanner)
-	if len(s) != len(t) {
-		fmt.Print("NO")
-		return
-	}
-	r := "YES"
-	m := make(map[byte]byte)
-	for i := 0; i < len(s); i++ {
-		c, ok := m[s[i]]
-		if !ok {
-			m[s[i]] = t[i]
-			continue
-		}
-		if c != t[i] {
-			r = "NO"
-			break
-		}
-	}
-	fmt.Print(r)
+    scanner := makeScanner()
+    s, t := readLine(scanner), readLine(scanner)
+    if len(s) != len(t) {
+        fmt.Print("NO")
+        return
+    }
+    ms := make(map[byte]byte)
+    mt := make(map[byte]byte)
+    for i := 0; i < len(s); i++ {
+        if ct, okt := mt[s[i]]; !okt {
+            if cs, oks := ms[t[i]]; !oks {
+                ms[t[i]] = s[i]
+            } else if cs != s[i] {
+                fmt.Print("NO")
+                return
+            }
+            mt[s[i]] = t[i]
+        } else if ct != t[i] {
+            fmt.Print("NO")
+            return
+        }
+    }
+    fmt.Print("YES")
 }
 
 func makeScanner() *bufio.Scanner {
-	const maxCapacity = 3 * 1024 * 1024
-	buf := make([]byte, maxCapacity)
-	scanner := bufio.NewScanner(os.Stdin)
-	scanner.Buffer(buf, maxCapacity)
-	return scanner
+    const maxCapacity = 3 * 1024 * 1024
+    buf := make([]byte, maxCapacity)
+    scanner := bufio.NewScanner(os.Stdin)
+    scanner.Buffer(buf, maxCapacity)
+    return scanner
 }
 
 func readLine(scanner *bufio.Scanner) string {
-	scanner.Scan()
-	return scanner.Text()
+    scanner.Scan()
+    return scanner.Text()
 }
