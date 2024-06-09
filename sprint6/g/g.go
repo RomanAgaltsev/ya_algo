@@ -145,16 +145,6 @@ func readArray(scanner *bufio.Scanner) []int {
     return arr
 }
 
-func printArray(arr []int) {
-    writer := bufio.NewWriter(os.Stdout)
-    for i := 0; i < len(arr); i++ {
-        writer.WriteString(strconv.Itoa(arr[i]))
-        writer.WriteString(" ")
-    }
-    writer.WriteString("\n")
-    writer.Flush()
-}
-
 func readInt(scanner *bufio.Scanner) int {
     scanner.Scan()
     stringInt := scanner.Text()
