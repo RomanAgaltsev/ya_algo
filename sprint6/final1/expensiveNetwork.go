@@ -30,11 +30,15 @@ package main
 import (
     "bufio"
     "container/heap"
+    "errors"
     "fmt"
     "os"
+    "slices"
     "strconv"
     "strings"
 )
+
+var errGraphIsDisconnected = errors.New("Oops! I did it again")
 
 type Edge struct {
     u, v, w int
@@ -44,6 +48,7 @@ type Graph struct {
     n     int
     edges []Edge
     adj   [][]Edge
+    notVisited []int
 }
 
 func (g *Graph) addEdge(u, v, w int) {
@@ -52,7 +57,13 @@ func (g *Graph) addEdge(u, v, w int) {
     g.edges = append(g.edges, Edge{u, v, w})
 }
 
-func (g *Graph) max() int {
+func (g *Graph) max() (int, error) {
+    if g.n == 1 {
+        return 0, nil
+    }
+    if g.n > 1 && len(g.edges) == 0 {
+        return 0, errGraphIsDisconnected
+    }
     visited := make([]bool, g.n+1)
     eq := &EdgeQueue{}
     heap.Push(eq, Edge{-1, 1, 0})
@@ -70,7 +81,10 @@ func (g *Graph) max() int {
             }
         }
     }
-    return maxWeight
+    if slices.Contains(visited[1:], false) {
+        return 0, errGraphIsDisconnected
+    }
+    return maxWeight, nil
 }
 
 type EdgeQueue []Edge
@@ -105,7 +119,12 @@ func main() {
         uvw := readArray(scanner)
         g.addEdge(uvw[0], uvw[1], uvw[2])
     }
-    fmt.Print(g.max())
+    maxWeight, err := g.max()
+    if err != nil {
+        fmt.Print(err)
+        return
+    }
+    fmt.Print(maxWeight)
 }
 
 func makeScanner() *bufio.Scanner {
