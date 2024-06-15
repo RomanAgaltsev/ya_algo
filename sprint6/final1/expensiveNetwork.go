@@ -48,7 +48,6 @@ type Graph struct {
     n     int
     edges []Edge
     adj   [][]Edge
-    notVisited []int
 }
 
 func (g *Graph) addEdge(u, v, w int) {
