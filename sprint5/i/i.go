@@ -32,21 +32,32 @@ I. Разные деревья поиска
 package main
 
 import (
-	"fmt"
-	"strconv"
+    "fmt"
+    "strconv"
 )
 
 func getBSTNumber(n int) int {
-	return [16]int{1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, 58786, 208012, 742900, 2674440, 9694845}[n]
+    if n <= 1 {
+        return 1
+    }
+    dp := make([]int, n+1)
+    dp[0] = 1
+    dp[1] = 1
+    for i := 2; i <= n; i++ {
+        for j := 0; j < i; j++ {
+            dp[i] += dp[j] * dp[i-j-1]
+        }
+    }
+    return dp[n]
 }
 
 func main() {
-	fmt.Println(getBSTNumber(readInt()))
+    fmt.Println(getBSTNumber(readInt()))
 }
 
 func readInt() int {
-	var aString string
-	fmt.Scan(&aString)
-	a, _ := strconv.Atoi(aString)
-	return a
+    var aString string
+    fmt.Scan(&aString)
+    a, _ := strconv.Atoi(aString)
+    return a
 }
