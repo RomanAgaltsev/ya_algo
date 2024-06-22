@@ -44,26 +44,22 @@ import (
     "strings"
 )
 
+func getJump(n, k int) int {
+    dp := make([]int, n)
+    dp[0] = 1
+    for i := 1; i < n; i++ {
+        for j := max(0, i-k); j < i; j++ {
+            dp[i] = (dp[i] + dp[j]) % 1_000_000_007
+        }
+    }
+    return dp[n-1]
+}
+
 func main() {
     scanner := makeScanner()
     nk := readArray(scanner)
     n, k := nk[0], nk[1]
-    dp := make([]int, n+1)
-    dp[0] = 0
-    dp[1] = 1
-    for i := 2; i < len(dp); i++ {
-        if k >= i {
-            for j := 1; j < i; j++ {
-                dp[i] += dp[j]
-            }
-        } else {
-            for j := i - k; j < i; j++ {
-                dp[i] += dp[j]
-            }
-        }
-        dp[i] = dp[i] % 1000000007
-    }
-    fmt.Print(dp[n])
+    fmt.Print(getJump(n, k))
 }
 
 func makeScanner() *bufio.Scanner {
