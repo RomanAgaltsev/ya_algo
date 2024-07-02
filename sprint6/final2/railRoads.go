@@ -77,7 +77,7 @@ func (g *Graph) init() {
     }
 }
 
-// addRoad - добавляет дорогу-ребро в граф
+// addRoad - добавляет дорогу-ребро в список смежности графа
 func (g *Graph) addRoad(u, v int, t string) {
     // Если тип дороги = "B", меняем направление ребра
     if t == typeB {
