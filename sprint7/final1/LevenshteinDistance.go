@@ -12,6 +12,9 @@
 
 -- ПРИНЦИП РАБОТЫ --
 
+https://en.wikipedia.org/wiki/Levenshtein_distance
+https://en.wikipedia.org/wiki/Levenshtein_distance#Iterative_with_two_matrix_rows
+
 -- ДОКАЗАТЕЛЬСТВО КОРРЕКТНОСТИ --
 
 -- ВРЕМЕННАЯ СЛОЖНОСТЬ --
@@ -38,8 +41,9 @@ func LevenshteinDistance(s, t string) int {
     for i := 0; i <= lenS; i++ {
         prev[i] = i
     }
-    for i := 1; i <= lenT; i++ {
-        for j := 1; j <= lenS; j++ {
+    for i := 1; i < lenT+1; i++ {
+        curr[0] = i + 1
+        for j := 1; j < lenS+1; j++ {
             deletionCost := prev[j] + 1
             insertionCost := curr[j-1] + 1
             substitutionCost := 0
@@ -51,9 +55,8 @@ func LevenshteinDistance(s, t string) int {
             curr[j] = min(deletionCost, insertionCost, substitutionCost)
         }
         prev, curr = curr, prev
-        curr[0] = i + 1
     }
-    return prev[len(prev)-1]
+    return prev[lenS]
 }
 
 func main() {
