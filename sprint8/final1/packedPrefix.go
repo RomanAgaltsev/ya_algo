@@ -13,6 +13,10 @@
 -- ПРИНЦИП РАБОТЫ --
 
 
+n — однозначное натуральное число
+Второй стек для множителей
+Бинарный поиск для нахождения наибольшего общего префикса
+
 -- ДОКАЗАТЕЛЬСТВО КОРРЕКТНОСТИ --
 
 
@@ -76,7 +80,7 @@ func unpack(packedLine string) string {
         }
         if packedLine[i] == closeBracket {
             fragment := result.Pop()
-            multiplier, err := getDigit(fragment[0])
+            multiplier, err := strconv.Atoi(string(fragment[0]))
             if err == nil {
                 fragment = bytes.Repeat(fragment[1:], multiplier)
             }
@@ -85,7 +89,7 @@ func unpack(packedLine string) string {
             result.Push(prevFragment)
             continue
         }
-        _, err := getDigit(packedLine[i])
+        _, err := strconv.Atoi(string(packedLine[i]))
         if err == nil {
             result.Push([]byte{packedLine[i]})
             continue
@@ -100,13 +104,20 @@ func unpack(packedLine string) string {
 func main() {
     scanner := makeScanner()
     n := readInt(scanner)
-    for i := 0; i < n; i++ {
-        fmt.Print(unpack(readLine(scanner)))
+    prefix := unpack(readLine(scanner))
+    for i := 1; i < n; i++ {
+        nextLine := unpack(readLine(scanner))
+        if len(prefix) > len(nextLine) {
+            prefix = prefix[:len(nextLine)]
+        }
+        for j := 0; j < len(nextLine); j++ {
+            if j >= len(prefix) || nextLine[j] != prefix[j] {
+                prefix = prefix[:j]
+                break
+            }
+        }
     }
-}
-
-func getDigit(b byte) (int, error) {
-    return strconv.Atoi(string(b))
+    fmt.Print(prefix)
 }
 
 func makeScanner() *bufio.Scanner {
